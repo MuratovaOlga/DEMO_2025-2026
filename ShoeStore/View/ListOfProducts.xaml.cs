@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShoeStore.Data;
 using ShoeStore.Models;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace ShoeStore.View
     /// </summary>
     public partial class ListOfProducts : Window
     {
+        public string Name { get; set; }
         //Основной список продуктов
         public List<Product> Products { get; set; }
 
@@ -33,13 +35,15 @@ namespace ShoeStore.View
 
         public ListOfProducts()
         {
+           
             InitializeComponent();
-            using(ShoeStoreDbContext dbContext = new ShoeStoreDbContext())
+            
+            using (ShoeStoreDbContext dbContext = new ShoeStoreDbContext())
             {
                 Products = dbContext.Products
-                    .Include(c=>c.IdProductCategoryNavigation)
-                    .Include(c=>c.IdManufacturerNavigation)
-                    .Include(c=>c.IdSupplierNavigation)
+                    .Include(c => c.IdProductCategoryNavigation)
+                    .Include(c => c.IdManufacturerNavigation)
+                    .Include(c => c.IdSupplierNavigation)
                     .ToList();
             }
             Filtration = new List<string>()
@@ -58,6 +62,16 @@ namespace ShoeStore.View
 
             //Вызываем метод отрисовки UserControl
             DrawingProducts(Products);
+
+            if (CurrentUser._CurrentUser != null)
+            {
+                NameUser.Text = CurrentUser._CurrentUser.Fiouser;
+            }
+            else
+            {
+                NameUser.Text = "Гость";
+            }
+
             DataContext = this;
         }
 
@@ -71,14 +85,12 @@ namespace ShoeStore.View
             }
         }
 
-        //Фильтрация данных (на данный момент работает не полностью)
-        private void ApplyFilter(object sender, TextChangedEventArgs e)
+        //Фильтрация/сортировка/поиск
+
+        private void Apply()
         {
-            SelectedFiltrationCommand(null, null);
-            string searchText = (sender as TextBox).Text.ToLower();
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                ProductsFiltered = Products.Where(p =>
+            string searchText = SearchText.Text.ToLower() ?? "";
+            ProductsFiltered = Products.Where(p =>
                     p.NameProduct?.ToLower().Contains(searchText) == true ||
                     p.UnitOfMeasurementProduct?.ToLower().Contains(searchText) == true ||
                     p.DescriptionProduct?.ToLower().Contains(searchText) == true ||
@@ -87,32 +99,49 @@ namespace ShoeStore.View
                     p.IdProductCategoryNavigation.CategoryName.ToLower().Contains(searchText) == true
                 ).ToList();
 
-                DrawingProducts(ProductsFiltered);
+            if (SelectedFiltration == Filtration[0])
+            {
+                ProductsFiltered = ProductsFiltered.Where(x => true).ToList();
             }
             else
             {
-                DrawingProducts(Products);
+                ProductsFiltered = ProductsFiltered.Where(p => p.IdSupplierNavigation.NameSupplier == SelectedFiltration).ToList();
             }
+
+            if(Ascending.IsChecked == true)
+            {
+                ProductsFiltered = ProductsFiltered.OrderBy(item => item.QuantityInStockProduct).ToList();
+            }
+            else if(Descending.IsChecked == true)
+            {
+                ProductsFiltered = ProductsFiltered.OrderBy(item => item.QuantityInStockProduct).ToList();
+                ProductsFiltered.Reverse();
+                
+            }
+            DrawingProducts(ProductsFiltered);
+        }
+
+
+        private void ApplyFilter(object sender, TextChangedEventArgs e)
+        {
+            Apply();
         }
 
         private void SelectedFiltrationCommand(object sender, SelectionChangedEventArgs e)
         {
-            if (SelectedFiltration == Filtration[0])
-            {
-                ProductsFiltered = ProductsFiltered.Where(x => true).ToList();
-                DrawingProducts(ProductsFiltered);
-            }
-            else
-            {
-
-                ProductsFiltered = ProductsFiltered.Where(p => p.IdSupplierNavigation.NameSupplier == SelectedFiltration).ToList();
-                DrawingProducts(ProductsFiltered);
-            }
+            Apply();
         }
 
         private void ResetCommand(object sender, RoutedEventArgs e)
         {
-            listBoxProducts.ItemsSource = Products;
+            DrawingProducts(Products);
+            Ascending.IsChecked = false;
+            Descending.IsChecked = false;
+
+        }
+        private void ascendingCommand(object sender, RoutedEventArgs e)
+        {
+            Apply();
         }
     }
 }

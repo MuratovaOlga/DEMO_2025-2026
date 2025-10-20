@@ -52,6 +52,4 @@ public partial class Product
         if (PhotoProduct == null) PhotoProduct = "C:\\Users\\Home\\Desktop\\VKI NSU\\проекты\\ShoeStore\\ShoeStore\\Images\\picture.png";
         PhotoProduct = PhotoProduct.Replace("\r\n", "");
     }
-
-
 }
