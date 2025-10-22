@@ -1,0 +1,33 @@
+﻿using ShoeStore.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace ShoeStore.View
+{
+    /// <summary>
+    /// Логика взаимодействия для ProductCard.xaml
+    /// </summary>
+    public partial class ProductCard : Window
+    {
+        public ProductCard()
+        {
+            InitializeComponent();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            State.StateUpdateProduct = false;
+        }
+    }
+}

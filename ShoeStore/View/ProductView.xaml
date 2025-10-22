@@ -7,11 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="250" d:DesignWidth="1000">
     <Grid Name="Back" Width="1000">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1.9*"/>
-                <ColumnDefinition Width="0.6*"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.9*"/>
+            <ColumnDefinition Width="0.6*"/>
+        </Grid.ColumnDefinitions>
 
         <Border Grid.Column ="0" BorderBrush="Black" BorderThickness="2" Margin="5" Background="White">
             <Image Source="{Binding PhotoProduct}" Height="200" Width="200" Grid.Column="0" Margin="7 5 5 5" />

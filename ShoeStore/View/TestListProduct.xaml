@@ -1,0 +1,103 @@
+﻿<Window x:Class="ShoeStore.View.TestListProduct"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ShoeStore.View"
+        mc:Ignorable="d"
+        Title="TestListProduct" Height="450" Width="800">
+    <Grid>
+        <ListView x:Name="listProduct" ItemsSource="{Binding Products}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="10" Background="#F5F5F5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0 0 0 10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="300"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0" Source="{Binding PhotoProduct}" 
+                           Width="150" Height="150" Stretch="UniformToFill" 
+                           Margin="0 0 10 0"/>
+
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock Text="{Binding NameProduct}" 
+                                   FontSize="16" FontWeight="Bold"
+                                   TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding IdProductCategoryNavigation.CategoryName}" 
+                                    FontSize="16" FontWeight="Bold"
+                                    TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding ArticleProduct}" 
+                                   FontSize="12" Foreground="Gray" Margin="0 5 0 0"/>
+                                
+                                <TextBlock Text="{Binding NameProduct}" 
+                                           FontSize="16" FontWeight="Bold"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="1" Margin="0 10 0 10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <TextBlock Text="Цена:" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding PriceProduct, StringFormat=C2}" 
+                                   FontSize="18" 
+                                   Foreground="{Binding CurrentDiscountProduct}"/>
+
+                                <TextBlock Text="Остаток:" FontWeight="Bold" Margin="0 10 0 0"/>
+                                <TextBlock FontSize="12" Foreground="Gray">
+                                    <Run Text="{Binding QuantityInStockProduct}" />
+                                    <Run Text="{Binding UnitOfMeasurementProduct}" />
+                                </TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock Text="Поставщик:" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding IdSupplierNavigation.NameSupplier}" 
+                                   FontSize="12" Margin="0 5 0 0"/>
+
+                                <TextBlock Text="Производитель:" FontWeight="Bold" Margin="0 10 0 0"/>
+                                <TextBlock Text="{Binding IdManufacturerNavigation.Name}" 
+                                   FontSize="12" Margin="0 5 0 0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="150">
+                                <TextBlock Text="{Binding DescriptionProduct}" 
+                                   TextWrapping="Wrap" 
+                                   FontSize="12" 
+                                   Margin="0 10 0 10"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel 
+                ItemWidth="300" 
+                ItemHeight="400" 
+                Orientation="Horizontal" 
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Margin="10"
+                IsItemsHost="True"/>
+
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+    </Grid>
+</Window>

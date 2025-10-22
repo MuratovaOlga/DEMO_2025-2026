@@ -29,8 +29,13 @@ namespace ShoeStore.View
         //Свойства для фильтрации/сортировки/поиска
         public List<string> Filtration { get; set; }
         public string SelectedFiltration { get; set; }
-        public List<Product> ProductsFiltered { get; set; }
 
+
+        public List<string> Sorting { get; set; }
+        public string SelectedSorting { get; set; }
+
+
+        public List<Product> ProductsFiltered { get; set; }
 
 
         public ListOfProducts()
@@ -46,6 +51,14 @@ namespace ShoeStore.View
                     .Include(c => c.IdSupplierNavigation)
                     .ToList();
             }
+
+            Sorting = new List<string>()
+            {
+                "Количество на складе",
+                "По возрастанию",
+                "По убыванию"
+            };
+            SelectedSorting = Sorting[0];
             Filtration = new List<string>()
             {
                 "Все поставщики"
@@ -80,14 +93,13 @@ namespace ShoeStore.View
             listBoxProducts.Items.Clear();
             foreach (var item in products)
             {
-                //В ListBox помещаем все UС 
                 listBoxProducts.Items.Add(new ProductView(item));
             }
         }
 
         //Фильтрация/сортировка/поиск
 
-        private void Apply()
+        private void dataManipulation()
         {
             string searchText = SearchText.Text.ToLower() ?? "";
             ProductsFiltered = Products.Where(p =>
@@ -108,40 +120,52 @@ namespace ShoeStore.View
                 ProductsFiltered = ProductsFiltered.Where(p => p.IdSupplierNavigation.NameSupplier == SelectedFiltration).ToList();
             }
 
-            if(Ascending.IsChecked == true)
+            if(SelectedSorting == Sorting[1])
             {
                 ProductsFiltered = ProductsFiltered.OrderBy(item => item.QuantityInStockProduct).ToList();
             }
-            else if(Descending.IsChecked == true)
+            else if(SelectedSorting == Sorting[1])
             {
                 ProductsFiltered = ProductsFiltered.OrderBy(item => item.QuantityInStockProduct).ToList();
                 ProductsFiltered.Reverse();
-                
             }
             DrawingProducts(ProductsFiltered);
         }
 
 
-        private void ApplyFilter(object sender, TextChangedEventArgs e)
+        private void searchCommand(object sender, TextChangedEventArgs e)
         {
-            Apply();
+            dataManipulation();
         }
 
-        private void SelectedFiltrationCommand(object sender, SelectionChangedEventArgs e)
+        private void selectedFiltrationCommand(object sender, SelectionChangedEventArgs e)
         {
-            Apply();
+            dataManipulation();
         }
 
         private void ResetCommand(object sender, RoutedEventArgs e)
         {
             DrawingProducts(Products);
-            Ascending.IsChecked = false;
-            Descending.IsChecked = false;
 
         }
         private void ascendingCommand(object sender, RoutedEventArgs e)
         {
-            Apply();
+            dataManipulation();
+        }
+
+        private void sortingCommand(object sender, SelectionChangedEventArgs e)
+        {
+            dataManipulation();        
+        }
+
+        private void UpdateDataProduct(object sender, SelectionChangedEventArgs e)
+        {
+            if(!State.StateUpdateProduct)
+            {
+                ProductCard productCard = new ProductCard();
+                productCard.Show();
+                State.StateUpdateProduct = true;
+            }
         }
     }
 }

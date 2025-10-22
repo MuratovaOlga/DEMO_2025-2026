@@ -45,9 +45,9 @@ namespace ShoeStore.View
         private void AuthorizationGuestCommand(object sender, RoutedEventArgs e)
         {
             CurrentUser._CurrentUser = null;
-            ListOfProducts products = new ListOfProducts();
-            products.Show();
+            TestListProduct products = new TestListProduct();
             MessageBox.Show("Вы вошли как Гость");
+            products.Show();
             Close();
         }
     }
