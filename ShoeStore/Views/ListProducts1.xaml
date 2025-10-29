@@ -6,10 +6,24 @@
         xmlns:local="clr-namespace:ShoeStore.Views"
         mc:Ignorable="d"
         Title="Список продуктов" Height="800" Width="1300"
-        WindowStartupLocation="CenterScreen" Icon="/Views/Icon.JPG">
-    <Grid>
-        <ListBox Margin="5" Name="listProduct">
+        WindowStartupLocation="CenterScreen" Icon="C:/Users/Home/Desktop/VKI NSU/проекты/ShoeStore/ShoeStore/Images/Icon.png">
+    <StackPanel Orientation="Vertical">
+
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBox FontFamily="Times New Roman" FontSize="16" Width="120" TextChanged="SearchCommand"/>
+            <ComboBox Width="150" Margin="10 5" SelectionChanged="ComboBox_SelectionChanged">
+                <TextBlock Text=" " FontFamily="Times New Roman" FontSize="16"/>
+                <TextBlock Text="По возрастанию" FontFamily="Times New Roman" FontSize="16"/>
+                <TextBlock Text="По убыванию" FontFamily="Times New Roman" FontSize="16"/>
+            </ComboBox>
+            <ComboBox ItemsSource="{Binding SuppliersList}" Width="150" Margin="10 5" SelectionChanged="ComboBox_SelectionChanged_1"/>
+
+
+        </StackPanel>
+        
+        
+        <ListBox Margin="5" Name="listProduct" MaxHeight="630">
         </ListBox>
         
-    </Grid>
+    </StackPanel>
 </Window>

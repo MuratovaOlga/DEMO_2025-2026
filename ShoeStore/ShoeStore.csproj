@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Views\Icon.JPG" />
     <None Remove="View\Icon.JPG" />
   </ItemGroup>
 
@@ -23,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Views\Icon.JPG" />
     <Resource Include="View\Icon.JPG" />
   </ItemGroup>
 

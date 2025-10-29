@@ -34,16 +34,13 @@
                  ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="UpdateDataProduct" >
             
         </ListBox>
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Заказы" Width="80" 
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Заказы" Width="80" 
                 Margin="5,0,5,10" HorizontalAlignment="Left" 
                 Height="33" FontSize ="20" Background="MediumSpringGreen"/>
-                    <Button Content="Добавить товар" 
+            <Button Content="Добавить товар" 
                 Margin="5,0,5,10" HorizontalAlignment="Left" 
                 Height="33" FontSize ="20" Background="MediumSpringGreen" Width="155"/>
         </StackPanel>
-
-        
-
     </StackPanel>
 </Window>

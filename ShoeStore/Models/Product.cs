@@ -34,7 +34,6 @@ public partial class Product
     public virtual Manufacturer? IdManufacturerNavigation { get; set; }
 
     public virtual ProductCategory? IdProductCategoryNavigation { get; set; }
-
     public virtual Supplier IdSupplierNavigation { get; set; }
 
     public virtual PickUpPpoint? IdWarehouseNavigation { get; set; }
