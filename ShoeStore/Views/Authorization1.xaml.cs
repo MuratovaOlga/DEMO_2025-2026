@@ -1,18 +1,6 @@
 ﻿using ShoeStore.Data;
 using ShoeStore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ShoeStore.Views
 {
@@ -30,42 +18,50 @@ namespace ShoeStore.Views
 
         private void SignInGuest(object sender, RoutedEventArgs e)
         {
+            // сохранение информации о том, что пользователь вошёл как гость
             CurrentUser._CurrentUser = null;
 
+            //вызываем окно списка товаров
             ListProducts1 listProducts1 = new ListProducts1();
 
-            MessageBox.Show("Вы вошли как гость", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
+            //уведомляем пользователя
+            MessageBox.Show("Вы вошли как гость", "Вход", MessageBoxButton.OK, 
+                MessageBoxImage.Information);
+            //отображаем окно списка товаров
             listProducts1.Show();
-
+            //закрываем окно авторизации
             Close();
         }
 
         private void SignIn(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrEmpty(LoginTB.Text) || string.IsNullOrEmpty(PasswordBX.Password))
+            //Делаем проверку заполнения полей
+            if(string.IsNullOrWhiteSpace(LoginTB.Text) 
+                || string.IsNullOrWhiteSpace(PasswordBX.Password))
             {
-                MessageBox.Show("Все поля должны быть заполнены", "Вход", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Все поля должны быть заполнены", "Вход", MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
             }
             else
             {
+                //если поля заполнены, то открываем поток бд
                 using(ShoeStoreDbContext db =  new ShoeStoreDbContext())
                 {
+                    // делаем провеку на существование пользователя с введенными данными в системе
                     var currentUser = db.Users.FirstOrDefault(item=> item.LoginUser.Replace("\r\n", "") == (LoginTB.Text).Trim() 
                     && item.PasswordUser.Replace("\r\n", "") == (PasswordBX.Password).Trim());
-
                     if(currentUser == null)
                     {
+                        //если пользователь не найден, уведомляем 
                          MessageBox.Show("Пользователь не найден", "Вход", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                     CurrentUser._CurrentUser = currentUser;
-
                 }
                 ListProducts1 listProducts1 = new ListProducts1();
-
-                MessageBox.Show("Авторизация прошла успешно", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Авторизация прошла успешно", "Вход", MessageBoxButton.OK, 
+                    MessageBoxImage.Information);
                 listProducts1.Show();
-
                 Close();
 
             }

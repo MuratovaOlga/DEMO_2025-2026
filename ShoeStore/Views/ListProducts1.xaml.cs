@@ -1,18 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShoeStore.Data;
 using ShoeStore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ShoeStore.Views
 {
@@ -21,14 +13,34 @@ namespace ShoeStore.Views
     /// </summary>
     public partial class ListProducts1 : Window
     {
+        //Свойство для списка товаров
         public List<Product> ListProduct { get; set; }
-
+        public List<Product> SortListProduct { get; set; }
         public List<string> SuppliersList { get; set; }
         public ListProducts1()
         {
             InitializeComponent();
-            SuppliersList = new List<string>();
-            SuppliersList.Add("Все поставщики");
+            if(CurrentUser._CurrentUser == null)
+            {
+
+                Visib.Visibility = Visibility.Collapsed;
+                Visib1.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                if (CurrentUser._CurrentUser.IdRole == 3)
+                {
+                    Visib.Visibility = Visibility.Collapsed;
+                    Visib1.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            if (CurrentUser._CurrentUser != null)
+                NameUser.Text = CurrentUser._CurrentUser.Fiouser;
+            else
+                NameUser.Text = "Гость";
+
+            //Получения списка товаров из бд, включая категории, производителей и поставщиков для каждого товара
             using (ShoeStoreDbContext db = new ShoeStoreDbContext())
             {
                 ListProduct = db.Products
@@ -36,87 +48,140 @@ namespace ShoeStore.Views
                     .Include(m=>m.IdManufacturerNavigation)
                     .Include(s=>s.IdSupplierNavigation)
                     .ToList();
+            }
+            //отчиска строковых полей от посторонних элементов
+            foreach(var item in ListProduct)
+            {
+                item.CleanField();
+            }
+            //вызов метода отрисовки списка карточек товаров
+            drawinProduct(ListProduct);
+            //привязка контекста
+            DataContext = this;
 
-                var list = db.Suppliers.ToList();
-                foreach (var item in list)
+
+            SuppliersList = new List<string>()
+            {
+                "Все поставщики"
+            };
+            using (ShoeStoreDbContext db = new ShoeStoreDbContext())
+            {
+                foreach (var item in db.Suppliers.ToList())
                 {
                     SuppliersList.Add(item.NameSupplier.Replace("\r\n", ""));
                 }
             }
 
-            
-
-            foreach(var item in ListProduct)
-            {
-                item.CleanField();
-            }
-
-            drawinProduct(ListProduct);
+            SortBox.SelectedIndex = 0;
+            FilterBox.SelectedIndex = 0;
 
 
-            DataContext = this;
+
         }
 
-
+        //метод отрисовки списка карточек товаров
         private void drawinProduct(List<Product> _products)
         {
+            //отчиска списка
             listProduct.Items.Clear();
-
             foreach (var item in _products)
             {
+                //Создание UserControl для каждого товара
                 listProduct.Items.Add(new ProductCard1(item));
             }
+            //обновляем отображение списка в ListBox
             listProduct.Items.Refresh();
+        }
 
+        private void listProduct_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var UserControl = ((sender as ListBox).SelectedItem as ProductCard1).DataContext;
+                MessageBox.Show("");
+        }
+
+        private void BackCommand(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult messege = MessageBox.Show("Вы действительно хотите выйти", "Выход",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if(messege == MessageBoxResult.Yes)
+            {
+                CurrentUser._CurrentUser = null;
+                Authorization1 authorization1 = new Authorization1();
+                authorization1.Show();
+                Close();
+            }
+        }
+
+        private void workWithData()
+        {
+            var textSearch = SearchText.Text.ToLower();
+            if (textSearch != null)
+            {
+                SortListProduct = ListProduct.Where(item => item.NameProduct.ToLower().Contains(textSearch)
+                || item.ArticleProduct.ToLower().Contains(textSearch)
+                || item.UnitOfMeasurementProduct.ToLower().Contains(textSearch)
+                || item.DescriptionProduct.ToLower().Contains(textSearch)
+                || item.IdManufacturerNavigation.Name.ToLower().Contains(textSearch)
+                || item.IdProductCategoryNavigation.CategoryName.ToLower().Contains(textSearch)
+                || item.IdSupplierNavigation.NameSupplier.ToLower().Contains(textSearch)
+                ).ToList();
+            }
+
+            var index = SortBox.SelectedIndex;
+
+            if (index == 0)
+            {
+                SortListProduct = SortListProduct;
+            }
+            else if (index == 1)
+            {
+                SortListProduct = SortListProduct.OrderBy(item => item.QuantityInStockProduct).ToList();
+            }
+            else
+            {
+                SortListProduct = SortListProduct.OrderByDescending(item => item.QuantityInStockProduct).ToList();
+            }
+
+            var textFilter = FilterBox.SelectedItem as string;
+            if (FilterBox.SelectedIndex == 0)
+            {
+                SortListProduct = SortListProduct;
+            }
+            else
+            {
+                SortListProduct = SortListProduct.Where(item => item.IdSupplierNavigation.NameSupplier == textFilter).ToList();
+            }
+            drawinProduct(SortListProduct);
         }
 
         private void SearchCommand(object sender, TextChangedEventArgs e)
         {
-            if(((TextBox)sender).Text != null)
-            {
-                var searchStr = ((TextBox)sender).Text.ToLower();
-                var list = ListProduct.Where(item => item.NameProduct.ToLower().Contains(searchStr) || 
-                item.UnitOfMeasurementProduct.ToLower().Contains(searchStr) ||
-                item.DescriptionProduct.ToLower().Contains(searchStr) ||
-                item.IdManufacturerNavigation.Name.ToLower().Contains(searchStr) ||
-                item.IdProductCategoryNavigation.CategoryName.ToLower().Contains(searchStr) ||
-                item.IdSupplierNavigation.NameSupplier.ToLower().Contains(searchStr))
-                    .ToList();
-                drawinProduct(list);
-            }
+            workWithData();
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SortCommand(object sender, SelectionChangedEventArgs e)
         {
-            if(((ComboBox)sender).SelectedIndex == 0)
-            {
-                drawinProduct(ListProduct);
-            }
-            else if(((ComboBox)sender).SelectedIndex == 1)
-            {
-                var list = ListProduct.OrderBy(item => item.QuantityInStockProduct).ToList();
-                drawinProduct(list);
-            }
-            else
-            {
-
-                var list = ListProduct.OrderByDescending(item => item.QuantityInStockProduct).ToList();
-                drawinProduct(list);
-            }
+            workWithData();
         }
 
-        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        private void FiltrationCoomand(object sender, SelectionChangedEventArgs e)
         {
-            if(((ComboBox)sender).SelectedIndex == 0)
-            {
-                drawinProduct(ListProduct);
-            }
-            else
-            {
-                var list = ListProduct.Where(item => item.IdSupplierNavigation.NameSupplier 
-                == ((ComboBox)sender).SelectedValue.ToString()).ToList();
-                drawinProduct(list);
-            }
+            workWithData();
+            
+        }
+
+        private void AddProductCommand(object sender, RoutedEventArgs e)
+        {
+            AddChangedProduct addChanged = new AddChangedProduct();
+            addChanged.Show();
+        }
+
+        private void UpdateProduct(object sender, MouseButtonEventArgs e)
+        {
+            var selectedProduct = (listProduct.SelectedItem as ProductCard1).DataContext as Product;
+            AddChangedProduct addChanged = new AddChangedProduct(selectedProduct);
+            addChanged.Show();
+
         }
     }
 }

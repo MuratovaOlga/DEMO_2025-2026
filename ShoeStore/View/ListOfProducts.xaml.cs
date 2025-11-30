@@ -34,7 +34,7 @@ namespace ShoeStore.View
         public List<string> Sorting { get; set; }
         public string SelectedSorting { get; set; }
 
-
+        //дополнительный список для сортировки
         public List<Product> ProductsFiltered { get; set; }
 
 
@@ -157,6 +157,16 @@ namespace ShoeStore.View
         {
             dataManipulation();        
         }
+
+
+
+
+
+
+
+
+
+
 
         private void UpdateDataProduct(object sender, SelectionChangedEventArgs e)
         {

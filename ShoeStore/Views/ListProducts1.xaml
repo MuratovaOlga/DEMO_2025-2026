@@ -9,21 +9,29 @@
         WindowStartupLocation="CenterScreen" Icon="C:/Users/Home/Desktop/VKI NSU/проекты/ShoeStore/ShoeStore/Images/Icon.png">
     <StackPanel Orientation="Vertical">
 
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <TextBox FontFamily="Times New Roman" FontSize="16" Width="120" TextChanged="SearchCommand"/>
-            <ComboBox Width="150" Margin="10 5" SelectionChanged="ComboBox_SelectionChanged">
-                <TextBlock Text=" " FontFamily="Times New Roman" FontSize="16"/>
-                <TextBlock Text="По возрастанию" FontFamily="Times New Roman" FontSize="16"/>
-                <TextBlock Text="По убыванию" FontFamily="Times New Roman" FontSize="16"/>
-            </ComboBox>
-            <ComboBox ItemsSource="{Binding SuppliersList}" Width="150" Margin="10 5" SelectionChanged="ComboBox_SelectionChanged_1"/>
-
-
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="300">
+            <Button Content="Назад" FontFamily="Times New Roman" FontSize="16" Width="100" Margin="0 0 5 0" Click="BackCommand"/>
+            <TextBlock Name="NameUser" FontFamily="Times New Roman" FontSize="16" />
         </StackPanel>
         
         
-        <ListBox Margin="5" Name="listProduct" MaxHeight="630">
-        </ListBox>
-        
+        <StackPanel Orientation="Horizontal" Margin="5" Name="Visib1">
+            <TextBox Name="SearchText" FontFamily="Times New Roman" FontSize="16" Width="180" Margin="10 5" TextChanged="SearchCommand" />
+            <ComboBox Name="SortBox" Width="150" Margin="10 5" SelectionChanged="SortCommand" >
+                <TextBlock Text="Все" FontFamily="Times New Roman" FontSize="16"/>
+                <TextBlock Text="По возрастанию" FontFamily="Times New Roman" FontSize="16"/>
+                <TextBlock Text="По убыванию" FontFamily="Times New Roman" FontSize="16"/>
+            </ComboBox>
+            <ComboBox Name="FilterBox" ItemsSource="{Binding SuppliersList}" Width="150" Margin="10 5" SelectionChanged="FiltrationCoomand" />
+        </StackPanel>
+
+
+        <ListBox Margin="5" Name="listProduct" MaxHeight="630" MouseDoubleClick="UpdateProduct" />
+
+        <StackPanel Orientation="Horizontal" Name="Visib">
+            <Button Content="Добавить" FontFamily="Times New Roman" FontSize="16" 
+         Width="120" HorizontalAlignment="Center" Margin="0 10" Background="#00FA9A" Click="AddProductCommand" />
+        </StackPanel>
+
     </StackPanel>
 </Window>

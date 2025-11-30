@@ -21,30 +21,29 @@ namespace ShoeStore.Views
     /// </summary>
     public partial class ProductCard1 : UserControl
     {
+        private BrushConverter bc = new BrushConverter();
         public ProductCard1(Product product)
         {
             InitializeComponent();
             pictureProduct(product);
             DataContext = product;
         }
-
-
         private void pictureProduct(Product product)
         {
             if (product.CurrentDiscountProduct > 15)
             {
-                Back.Background = new SolidColorBrush(Color.FromRgb(46,139,87));
+                Back.Background = (Brush)bc.ConvertFrom("#2E8B57");
             }
             if(product.CurrentDiscountProduct != 0)
             {
-                Price.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                Price.Foreground = new SolidColorBrush(Colors.Red);
                 Price.TextDecorations = TextDecorations.Strikethrough;
 
                 DiscountPrice.Text = (product.PriceProduct - (product.PriceProduct * (product.CurrentDiscountProduct / 100.0m))).ToString();
             }
             if(product.QuantityInStockProduct == 0)
             {
-                QuantityInStock.Background = new SolidColorBrush(Color.FromRgb(8, 251, 241));
+                QuantityInStock.Background = new SolidColorBrush(Colors.LightSkyBlue);
             }
         }
     }

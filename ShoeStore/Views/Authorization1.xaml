@@ -6,24 +6,24 @@
         xmlns:local="clr-namespace:ShoeStore.Views"
         mc:Ignorable="d"
         Title="Авторизация" Height="800" Width="1300"
-        WindowStartupLocation="CenterScreen" Icon="C:/Users/Home/Desktop/VKI NSU/проекты/ShoeStore/ShoeStore/Images/Icon.JPG">
+        WindowStartupLocation="CenterScreen" 
+        Icon="C:/Users/Home/Desktop/VKI NSU/проекты/ShoeStore/ShoeStore/Images/Icon.JPG">
     <Grid>
-
+        <!--Две колонки для отображения формы авторизации и логотипа компании-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-
+        <!--Логотип компании-->
         <Image Source="C:\Users\Home\Desktop\VKI NSU\проекты\ShoeStore\ShoeStore\Images\Icon.png" Width="400" Height="400"
                Grid.Column="0"/>
 
-
+        <!--Разметка формы авторищации-->
         <StackPanel Orientation="Vertical" Grid.Column="2" Width="400" Background="#7FFF00" Height="300">
-
             <TextBlock Text="Авторизация" TextAlignment="Center" FontFamily="Times New Roman" 
                        FontSize="36"  FontWeight="DemiBold" Margin="0 5"/>
 
-
+            <!--Разметка надписи и поля для ввода Логина-->
             <StackPanel Orientation="Vertical" Margin="5">
                 <TextBlock Text="Логин" FontFamily="Times New Roman" 
                        FontSize="24"/>
@@ -31,7 +31,7 @@
                 <TextBox Name="LoginTB" FontFamily="Times New Roman" 
                        FontSize="24" Margin="10 5" Height="40"/>
             </StackPanel>
-
+            <!--Разметка надписи и поля для ввода Пароля-->
             <StackPanel Orientation="Vertical" Margin="5">
                 <TextBlock Text="Пароль" FontFamily="Times New Roman" 
             FontSize="24"/>
@@ -40,13 +40,11 @@
             FontSize="24" Margin="10 5" Height="40"/>
             </StackPanel>
 
-
+            <!--Разметка кнопок "Войти" и "Войти как гость"-->
             <StackPanel Orientation="Horizontal" Margin="5" Width="300">
                 <Button Content="Войти" Height="40" FontSize="24" FontFamily="Times New Roman" Background="#00FA9A" Margin="20 5" Click="SignIn"/>
                 <Button Content="Войти как гость" Height="40" FontSize="24" FontFamily="Times New Roman" Background="#00FA9A" Margin="20 5" Click="SignInGuest"/>
             </StackPanel>
-
-
         </StackPanel>
     </Grid>
 </Window>
